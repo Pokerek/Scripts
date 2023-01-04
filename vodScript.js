@@ -4,38 +4,28 @@
 // @version      0.1
 // @description  Skip ads on vod pages
 // @author       You
-// @include       /^https://(vod|cyfrowa)\.tvp\.pl/*
+// @include       /^https://(vod|cyfrowa|sport)\.tvp\.pl/*//
+// @include       /^https://pilot.wp.pl/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tvp.pl
 // @grant        none
 // ==/UserScript==
 
 (async function () {
-   'use strict';
+   "use strict";
 
    //Functions
-   const waitForLoad = new Promise((resolve) => {
-      const waitInterval = setInterval(() => {
-         const startButton = document.querySelector(
-            '#app .page-detail__header > .buttons.buttons__group button'
-         );
-         if (startButton !== null) {
-            clearInterval(waitInterval);
-            startButton.click();
-            resolve();
-         }
-      }, 500);
-   });
-
    let watcher = null;
+
+   let url = "";
 
    const startInterval = (fn) =>
       setInterval(() => {
          fn();
-      }, 200);
+      }, 1000);
 
    const skipAds = () => {
-      const ads = document.querySelectorAll('video')[1];
-      if (ads) {
+      const ads = document.querySelector('video[title="Advertisement"]');
+      if (ads && ads.src) {
          clearInterval(watcher);
          if (!ads.paused && ads.duration) {
             ads.currentTime = ads.duration;
@@ -44,7 +34,15 @@
       }
    };
 
-   //Execute
-   await waitForLoad;
-   watcher = startInterval(skipAds);
+   const checkURL = () => {
+      if (url !== document.URL) {
+         url = document.URL;
+         console.log(`New url: ${url}`);
+         clearInterval(watcher);
+         watcher = null;
+         watcher = startInterval(skipAds);
+      }
+   };
+
+   startInterval(checkURL);
 })();
