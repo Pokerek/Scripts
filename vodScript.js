@@ -6,6 +6,7 @@
 // @author       You
 // @include       /^https://(vod|cyfrowa|sport)\.tvp\.pl/*//
 // @include       /^https://pilot.wp.pl/*
+// @include       /^https://polsatgo.pl/wideo/programy/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=tvp.pl
 // @grant        none
 // ==/UserScript==
